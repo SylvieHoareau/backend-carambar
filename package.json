@@ -1,0 +1,15 @@
+{
+  "name": "backend-carambar",
+  "version": "1.0.0",
+  "description": "Backend Node JS pour une application de blagues pour Carambar&amp;Co",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
