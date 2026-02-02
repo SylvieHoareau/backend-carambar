@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend Node JS pour une application de blagues pour Carambar&amp;Co",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
