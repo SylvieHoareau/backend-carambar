@@ -20,7 +20,7 @@ export const addJoke = async (req, res) => {
     try {
         const newJoke = await Joke.create({
             question: req.body.question,
-            reponse: req.body.reponse
+            response: req.body.response
         });
         res.status(201).json({ 
             message: 'Blague ajoutée avec succès !', 

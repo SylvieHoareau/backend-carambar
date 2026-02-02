@@ -1,9 +1,36 @@
 import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import { rateLimit } from 'express-rate-limit';
 import jokeRoutes from './routes/jokeRoutes.js';
 import sequelize from './models/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Middleware de sécurité pour les en-têtes HTTP
+app.use(helmet());
+
+// Configuration CORS
+const corsOptions = {
+    origin: '*', // Autoriser toutes les origines
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+
+// Activer CORS avec les options définies
+app.use(cors(corsOptions));
+
+// Limiteur de taux pour prévenir les abus
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limite chaque IP à 100 requêtes par fenêtre (ici, par 15 minutes)
+    message: { message: "Trop de requêtes provenant de cette IP, veuillez réessayer plus tard." }
+});
+
+// Appliquer le rate limiter à toutes les requêtes
+app.use(limiter);
 
 // Middleware pour lire le JSON
 app.use(express.json());
