@@ -64,39 +64,38 @@ router.post('/', addJoke);
  * @swagger
  * /jokes:
  *   get:
- *    summary: Obtenir toutes les blagues
- *     tags: [Blagues]
- *  
- *   responses:
- *    200:
- *     description: Liste des blagues
- *    content:
- *    application/json:
- *    schema:
- *    type: array
- *   items:
- *    type: object
- *   properties:
- *    id:
- *    type: integer
- *   example: 1
- *   question:
- *      type: string
- *      example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
- *  response:
- *      type: string
- *      example: "Parce que sinon ils tombent dans le bateau."
- *  500:
- *   description: Erreur serveur
- *      content:
-
- *      application/json:
- *      schema:
- *      type: object
- *      properties:
- *      message:
- *        type: string
- *        example: "Erreur serveur"
+ *     summary: Obtenir toutes les blagues
+ *     tags:
+ *       - Blagues
+ *     responses:
+ *       '200':
+ *         description: Liste des blagues
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   question:
+ *                     type: string
+ *                     example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
+ *                   response:
+ *                     type: string
+ *                     example: "Parce que sinon ils tombent dans le bateau."
+ *       '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
  */
 // Route pour obtenir toutes les blagues
 router.get('/', getAllJokes);
@@ -159,73 +158,72 @@ router.get('/:id', getAllJokes);
  * @swagger
  * /jokes/{id}:
  *   put:
- *      summary: Mettre à jour une blague par son ID
- *      tags: [Blagues]
- *      parameters:
- *          - in: path
- *          name: id
- *          required: true
- *      schema:
- *          type: integer
- *          description: L'ID de la blague à mettre à jour
- *      requestBody:
- *          required: true
- *          content:
- *          application/json:
- *      schema:
- *          type: object
- *          properties:
- *          question:
- *              type: string
- *              example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
- *          response:
- *              type: string
- *             example: "Parce que sinon ils tombent dans le bateau."
- *      responses:
- *          200:
- *              description: Blague mise à jour avec succès
- *              content:
- *          application/json:
- *              schema:
- *                  type: object
- *                  properties:
- *                      message:
- *                          type: string
- *                          example: "Blague mise à jour avec succès !"
- *        joke:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *                  example: 1
- *              question:
- *                  type: string
- *                  example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
- *              response:
- *                  type: string
- *                  example: "Parce que sinon ils tombent dans le bateau."
- *                  type: string
- *                  example: "Parce que sinon ils tombent dans le bateau."
-*           404:
-*               description: Blague non trouvée
-*               content:
-*               application/json:
-*               schema:
-*                  type: object
-*                  properties:
-*                    message:
-*                      type: string
-*                      example: "Blague non trouvée !"
-*           500:
-*               description: Erreur serveur
-*               content:
-*               application/json:
-*               schema:
-*                   type: object
-*                   properties:
-*              message:
-*                type: string
-*                example: "Erreur serveur"
+ *     summary: Mettre à jour une blague par son ID
+ *     tags:
+ *       - Blagues
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: L'ID de la blague à mettre à jour
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               question:
+ *                 type: string
+ *                 example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
+ *               response:
+ *                 type: string
+ *                 example: "Parce que sinon ils tombent dans le bateau."
+ *     responses:
+ *       '200':
+ *         description: Blague mise à jour avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Blague mise à jour avec succès !"
+ *                 joke:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     question:
+ *                       type: string
+ *                       example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
+ *                     response:
+ *                       type: string
+ *                       example: "Parce que sinon ils tombent dans le bateau."
+ *       '404':
+ *         description: Blague non trouvée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Blague non trouvée !"
+ *       '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
  */
 // Route pour mettre à jour une blague par son ID
 router.put('/:id', updateJokeById);
@@ -233,51 +231,48 @@ router.put('/:id', updateJokeById);
 /**
  * @swagger
  * /jokes/{id}:
- *  delete:
- *      summary: Supprimer une blague par son ID
- *      tags: [Blagues]
- *      parameters:
- *          - in: path
- *          name: id
- *          required: true
- *          schema:
- *              type: integer
- *              description: L'ID de la blague à supprimer
- *      responses:
- *          200:
- *              description: Blague supprimée avec succès
- *              content:
- *                  application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          message:
- *                              type: string
- *                              example: "Blague supprimée avec succès !"
- *          404:
- *              description: Blague non trouvée
- *              content:
- *                  application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          message:
- *                              type: string
- *                              example: "Blague non trouvée !"
- *                      properties:
- *                          message:
- *                              type: string
- *                              example: "Blague non trouvée !"
- *          500:
- *              description: Erreur serveur
- *              content:
- *                  application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          message:
- *                              type: string
- *                              example: "Erreur serveur"
+ *   delete:
+ *     summary: Supprimer une blague par son ID
+ *     tags:
+ *       - Blagues
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: L'ID de la blague à supprimer
+ *     responses:
+ *       '200':
+ *         description: Blague supprimée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Blague supprimée avec succès !"
+ *       '404':
+ *         description: Blague non trouvée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Blague non trouvée !"
+ *       '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
  */
 // Route pour supprimer une blague par son ID
 router.delete('/:id', deleteJokeById);

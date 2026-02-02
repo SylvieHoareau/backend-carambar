@@ -18,4 +18,4 @@ const options = {
     apis: ["./routes/*.js"] // Chemin vers les fichiers contenant les annotations Swagger
 };
 
-export const swaggerSpec = swaggerJSDoc(options);
+export const specs = swaggerJSDoc(options);
