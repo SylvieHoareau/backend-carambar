@@ -2,6 +2,8 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './config/swagger.js';
 import jokeRoutes from './routes/jokeRoutes.js';
 import sequelize from './models/index.js';
 
@@ -31,6 +33,9 @@ const limiter = rateLimit({
 
 // Appliquer le rate limiter à toutes les requêtes
 app.use(limiter);
+
+// Documentation Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Middleware pour lire le JSON
 app.use(express.json());
