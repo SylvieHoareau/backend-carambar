@@ -1,4 +1,6 @@
 import express from 'express';
+import jokeRoutes from './routes/jokeRoutes.js';
+import sequelize from './models/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,7 +13,33 @@ app.get('/', (req, res) => {
   res.send('Bienvenue sur le backend de Carambar&amp;Co !');
 });
 
-// Lancement du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+// Liste des utilisateurs
+app.get('/users', (req, res) => {
+    res.json([
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' }
+    ]);
 });
+
+// Ajouter un utilisateur
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+    // Ici, vous ajouteriez l'utilisateur à votre base de données
+    res.status(201).json({ message: 'Utilisateur ajouté avec succès !', user: newUser });
+});
+
+// Utilisation des routes pour les blagues
+app.use('/api/jokes', jokeRoutes);
+
+// Synchronisation de la base de données
+sequelize.sync().then(() => {
+    console.log('Base de données synchronisée');
+    // Lancement du serveur
+    app.listen(PORT, () => {
+    console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log('Accueil : http://localhost:' + PORT);
+    console.log('Accéder à l API : http://localhost:' + PORT + '/users pour les utilisateurs et http://localhost:' + PORT + '/api/jokes pour les blagues.');
+    console.log('Appuyez sur CTRL+C pour arrêter le serveur.');
+    });
+});
+
