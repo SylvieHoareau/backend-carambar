@@ -8,7 +8,8 @@ const router = express.Router();
  * /jokes:
  *   post:
  *     summary: Ajouter une nouvelle blague
- *     tags: [Blagues]
+ *     tags:
+ *       - Blagues
  *     requestBody:
  *       required: true
  *       content:
@@ -23,7 +24,7 @@ const router = express.Router();
  *                 type: string
  *                 example: "Parce que sinon ils tombent dans le bateau."
  *     responses:
- *       201:
+ *       '201':
  *         description: Blague ajoutée avec succès
  *         content:
  *           application/json:
@@ -35,26 +36,26 @@ const router = express.Router();
  *                   example: "Blague ajoutée avec succès !"
  *                 joke:
  *                   type: object
- *                   properties:   
- *                    id:
- *                    type: integer
- *                   example: 1
- *                   question:
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     question:
+ *                       type: string
+ *                       example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
+ *                     response:
+ *                       type: string
+ *                       example: "Parce que sinon ils tombent dans le bateau."
+ *       '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
  *                   type: string
- *                  example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
- *                  response:
- *                  type: string
- *                 example: "Parce que sinon ils tombent dans le bateau."
- *      500:
- *        description: Erreur serveur
- *       content:
- *        application/json:
- *         schema:
- *          type: object
- *          properties:
- *           message:
- *            type: string
- *           example: "Erreur serveur"
+ *                   example: "Erreur serveur"
  * 
  */
 router.post('/', addJoke);
