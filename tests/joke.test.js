@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '../app.js';
 import sequelize from '../models/index.js';
@@ -9,6 +9,11 @@ describe('Tests des endpoints des blagues', () => {
     beforeAll(async() => {
         // En forçant la recréation des tables pour un état propre
         await sequelize.sync({ force: true});
+    });
+
+    beforeEach(async() => {
+        // On vide les tables avant chaque test pour s'assurer de l'isolation des tests
+        await sequelize.sync({ force: true });
     });
 
     // Après les tests, on ferme la connexion à la base de données
@@ -77,30 +82,30 @@ describe('Tests des endpoints des blagues', () => {
         });
     });
 
+    // Flux complet : Création et Récupération
+    describe('Flux complet : Création et Récupération', () => {
+        it('devrait créer une blague puis la récupérer dans la liste', async () => {
+            const nouvelleBlague = {
+                question: "Pourquoi les développeurs détestent-ils la nature ?",
+                response: "Parce qu'il y a trop de bugs."
+            };
+
+            // On envoie la blague (POST)
+            const postRes = await request(app)
+                .post('/api/jokes')
+                .send(nouvelleBlague);
+                
+            expect(postRes.statusCode).toBe(201);
+            expect(postRes.body).toHaveProperty('joke');
+            expect(postRes.body.joke.question).toBe(nouvelleBlague.question);
+
+            // On vérifie qu'elle est bien dans la liste (GET)
+            const getRes = await request(app).get('/api/jokes');
+
+            expect(getRes.statusCode).toBe(200);
+            expect(getRes.body.length).toBe(1);
+            expect(getRes.body[0].question).toBe(nouvelleBlague.question);
+        })
+    });
 });
 
-// Flux complet : Création et Récupération
-describe('Flux complet : Création et Récupération', () => {
-    it('devrait créer une blague puis la récupérer dans la liste', async () => {
-        const nouvelleBlague = {
-            question: "Pourquoi les développeurs détestent-ils la nature ?",
-            response: "Parce qu'il y a trop de bugs."
-        };
-
-        // On envoie la blague (POST)
-        const postRes = await request(app)
-            .post('/api/jokes')
-            .send(nouvelleBlague);
-            
-        expect(postRes.statusCode).toBe(201);
-        expect(postRes.body).toHaveProperty('joke');
-        expect(postRes.body.joke.question).toBe(nouvelleBlague.question);
-
-        // On vérifie qu'elle est bien dans la liste (GET)
-        const getRes = await request(app).get('/api/jokes');
-
-        expect(getRes.statusCode).toBe(200);
-        expect(getRes.body.length).toBe(1);
-        expect(getRes.body[0].question).toBe(nouvelleBlague.question);
-    })
-});

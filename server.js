@@ -1,8 +1,14 @@
 import app from './app.js';
 import sequelize from './models/index.js';
+import dotenv from 'dotenv';
 
+// Chargement des variables d'environnement depuis le fichier .env
+dotenv.config();
+
+// Définition du port d'écoute
 const PORT = process.env.PORT || 3001;
 
+// Fonction pour démarrer le serveur
 const startServer = async() => {
     try {
         // Connexion et synchronisation de la base de données

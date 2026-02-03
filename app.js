@@ -5,10 +5,13 @@ import { rateLimit } from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.js';
 import jokeRoutes from './routes/jokeRoutes.js';
-// import sequelize from './models/index.js';
+import dotenv from 'dotenv';
 
+// Chargement des variables d'environnement depuis le fichier .env
+dotenv.config();
+
+// Création de l'application Express
 const app = express();
-// const PORT = process.env.PORT || 3000;
 
 // Middleware de sécurité pour les en-têtes HTTP
 app.use(helmet());
@@ -32,7 +35,10 @@ const limiter = rateLimit({
 });
 
 // Appliquer le rate limiter à toutes les requêtes
-app.use(limiter);
+if (process.env.NODE_ENV !== 'test')
+{
+    app.use(limiter);
+}
 
 // Documentation Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
@@ -62,18 +68,6 @@ app.post('/users', (req, res) => {
 
 // Utilisation des routes pour les blagues
 app.use('/api/jokes', jokeRoutes);
-
-// Synchronisation de la base de données
-// sequelize.sync().then(() => {
-//     console.log('Base de données synchronisée');
-//     // Lancement du serveur
-//     app.listen(PORT, () => {
-//     console.log(`Serveur démarré sur le port ${PORT}`);
-//     console.log('Accueil : http://localhost:' + PORT);
-//     console.log('Accéder à l API : http://localhost:' + PORT + '/users pour les utilisateurs et http://localhost:' + PORT + '/api/jokes pour les blagues.');
-//     console.log('Appuyez sur CTRL+C pour arrêter le serveur.');
-//     });
-// });
 
 export default app;
 
