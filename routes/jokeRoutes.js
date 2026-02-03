@@ -1,5 +1,11 @@
-import express from 'express';
-import { addJoke, getAllJokes, updateJokeById, deleteJokeById  } from '../controllers/jokeController.js';
+import express from "express";
+import {
+  addJoke,
+  getAllJokes,
+  getJokeById,
+  updateJokeById,
+  deleteJokeById,
+} from "../controllers/jokeController.js";
 const router = express.Router();
 
 // Route pour ajouter une blague
@@ -56,9 +62,9 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: "Erreur serveur"
- * 
+ *
  */
-router.post('/', addJoke);
+router.post("/", addJoke);
 
 /**
  * @swagger
@@ -98,14 +104,15 @@ router.post('/', addJoke);
  *                   example: "Erreur serveur"
  */
 // Route pour obtenir toutes les blagues
-router.get('/', getAllJokes);
+router.get("/", getAllJokes);
 
 /**
  * @swagger
  * /jokes/{id}:
  *   get:
  *     summary: Obtenir une blague par son ID
- *     tags: [Blagues]
+ *     tags:
+ *       - Blagues
  *     parameters:
  *       - in: path
  *         name: id
@@ -114,7 +121,7 @@ router.get('/', getAllJokes);
  *           type: integer
  *         description: L'ID de la blague à récupérer
  *     responses:
- *       200:
+ *       '200':
  *         description: Blague trouvée
  *         content:
  *           application/json:
@@ -130,29 +137,29 @@ router.get('/', getAllJokes);
  *                 response:
  *                   type: string
  *                   example: "Parce que sinon ils tombent dans le bateau."
- *       404:   
- *          description: Blague non trouvée
- *          content:
- *          application/json:
- *          schema:
- *            type: object
- *            properties:
- *              message:
- *                type: string
- *                example: "Blague non trouvée !"
- *      500:
- *          description: Erreur serveur
- *          content:
- *          application/json:
- *          schema:
- *            type: object
- *            properties:
- *              message:
- *                type: string
- *                example: "Erreur serveur"
+ *       '404':
+ *         description: Blague non trouvée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Blague non trouvée !"
+ *       '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
  */
 // Route pour obtenir une blague par son ID
-router.get('/:id', getAllJokes);
+router.get("/:id", getJokeById);
 
 /**
  * @swagger
@@ -226,7 +233,7 @@ router.get('/:id', getAllJokes);
  *                   example: "Erreur serveur"
  */
 // Route pour mettre à jour une blague par son ID
-router.put('/:id', updateJokeById);
+router.put("/:id", updateJokeById);
 
 /**
  * @swagger
@@ -275,7 +282,7 @@ router.put('/:id', updateJokeById);
  *                   example: "Erreur serveur"
  */
 // Route pour supprimer une blague par son ID
-router.delete('/:id', deleteJokeById);
+router.delete("/:id", deleteJokeById);
 
 // Exporter le routeur
 export default router;

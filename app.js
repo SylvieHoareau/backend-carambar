@@ -5,10 +5,10 @@ import { rateLimit } from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.js';
 import jokeRoutes from './routes/jokeRoutes.js';
-import sequelize from './models/index.js';
+// import sequelize from './models/index.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 // Middleware de sécurité pour les en-têtes HTTP
 app.use(helmet());
@@ -64,14 +64,16 @@ app.post('/users', (req, res) => {
 app.use('/api/jokes', jokeRoutes);
 
 // Synchronisation de la base de données
-sequelize.sync().then(() => {
-    console.log('Base de données synchronisée');
-    // Lancement du serveur
-    app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
-    console.log('Accueil : http://localhost:' + PORT);
-    console.log('Accéder à l API : http://localhost:' + PORT + '/users pour les utilisateurs et http://localhost:' + PORT + '/api/jokes pour les blagues.');
-    console.log('Appuyez sur CTRL+C pour arrêter le serveur.');
-    });
-});
+// sequelize.sync().then(() => {
+//     console.log('Base de données synchronisée');
+//     // Lancement du serveur
+//     app.listen(PORT, () => {
+//     console.log(`Serveur démarré sur le port ${PORT}`);
+//     console.log('Accueil : http://localhost:' + PORT);
+//     console.log('Accéder à l API : http://localhost:' + PORT + '/users pour les utilisateurs et http://localhost:' + PORT + '/api/jokes pour les blagues.');
+//     console.log('Appuyez sur CTRL+C pour arrêter le serveur.');
+//     });
+// });
+
+export default app;
 

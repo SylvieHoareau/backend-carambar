@@ -1,8 +1,3 @@
-// On simule nos données de blagues
-// const jokes = [
-//     { id: 1, joke: 'Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ? Parce que sinon ils tombent dans le bateau.' },
-//     { id: 2, joke: 'Quel est le comble pour un électricien ? De ne pas être au courant.' }
-// ];
 import Joke from '../models/jokeModel.js';
 
 // Obtenir toutes les blagues
@@ -11,59 +6,78 @@ export const getAllJokes = async (req, res) => {
         const jokes = await Joke.findAll();
         res.json(jokes);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Erreur lors de la récupération des blagues." });
     }
 };
 
 // Ajouter une nouvelle blague
 export const addJoke = async (req, res) => {
     try {
-        const newJoke = await Joke.create({
-            question: req.body.question,
-            response: req.body.response
-        });
+        const { question, response } = req.body;
+        const newJoke = await Joke.create({ question, response});
+        
         res.status(201).json({ 
             message: 'Blague ajoutée avec succès !', 
             joke: newJoke
         });
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        // Renvoie l'erreur réelle pour le debug, mais en production, on pourrait vouloir masquer cela
+        res.status(500).json({ message: "Données invalides ou manquantes." });
     }
 };
 
 // Obtenir une blague par son ID
-export const getJokeById = (req, res) => {
-    const jokeId = parseInt(req.params.id, 10);
-    const joke = jokes.find(j => j.id === jokeId);
-    if (joke) {
-        res.json(joke);
-    } else {
-        res.status(404).json({ message: 'Blague non trouvée !' });
-    }
+export const getJokeById = async (req, res) => {
+    try {
+        // Recherche de la blague par son ID
+        const joke = await Joke.findByPk(req.params.id);
+
+        // On vérifie si la blague existe
+        if (joke) {
+            res.json(joke);
+        } else {
+            res.status(404).json({ message: 'Blague non trouvée !' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erreur serveur" });
+    }   
 };
 
 // Mettre à jour une blague par son ID
-export const updateJokeById = (req, res) => {
-    const jokeId = parseInt(req.params.id, 10);
-    const updatedJoke = req.body;
-    const index = jokes.findIndex(j => j.id === jokeId);
-    if (index !== -1) {
-        jokes[index] = updatedJoke;
-        res.json({ message: 'Blague mise à jour avec succès !', joke: updatedJoke });
-    } else {
-        res.status(404).json({ message: 'Blague non trouvée !' });
+export const updateJokeById = async (req, res) => {
+    try {
+        const { question, response } = req.body;
+        const [updated] = await Joke.update(
+            { question, response }, 
+            { where: { id: req.params.id }
+        });
+
+        if (updated) {
+            const updatedJoke = await Joke.findByPk(req.params.id);
+            res.json({ message: 'Blague mise à jour avec succès !', joke: updatedJoke });
+        }
+        else 
+        {
+            res.status(404).json({ message: 'Blague non trouvée !' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erreur serveur" });
     }
 };
 
 // Supprimer une blague par son ID
-export const deleteJokeById = (req, res) => {
-    const jokeId = parseInt(req.params.id, 10);
-    const index = jokes.findIndex(j => j.id === jokeId);
-    if (index !== -1) {
-        jokes.splice(index, 1);
-        res.json({ message: 'Blague supprimée avec succès !' });
-    } else {
-        res.status(404).json({ message: 'Blague non trouvée !' });
+export const deleteJokeById = async (req, res) => {
+    try {
+        const deleted = await Joke.destroy({
+            where: { id: req.params.id }
+        });
+        if (deleted) {
+            res.json({ message: 'Blague supprimée avec succès !' });
+        } else {
+            res.status(404).json({ message: 'Blague non trouvée !' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la suppression" });
     }
 };
