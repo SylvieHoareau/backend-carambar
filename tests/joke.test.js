@@ -21,6 +21,7 @@ describe('Tests des endpoints des blagues', () => {
         await sequelize.close();
     });
 
+    // Test pour GET /api/jokes
     describe('GET /api/jokes', () => {
         it('devrait retourner une liste vide au début', async() => {
             const res = await request(app).get('/api/jokes');
@@ -31,6 +32,7 @@ describe('Tests des endpoints des blagues', () => {
         });
     });
 
+    // Test pour POST /api/jokes
     describe('POST /api/jokes', () => {
         it('devrait ajouter une nouvelle blague', async() => {
             const nouvelleBlague = {
@@ -50,6 +52,7 @@ describe('Tests des endpoints des blagues', () => {
         });
     });
 
+    // Test pour GET /api/jokes/:id
     describe('GET /api/jokes/:id', () => {
         it('devrait récupérer une blague par son ID', async() => {
             // D'abord, on ajoute une blague pour être sûr qu'elle existe
@@ -73,6 +76,7 @@ describe('Tests des endpoints des blagues', () => {
         });
     });
 
+    // Test pour GET /api/jokes/:id - blague non trouvée
     describe('GET /api/jokes/:id - blague non trouvée', () => {
         it('devrait retourner 404 si la blague n\'existe pas', async() => {
             const res = await request(app).get('/api/jokes/9999'); // ID improbable
@@ -80,6 +84,73 @@ describe('Tests des endpoints des blagues', () => {
             expect(res.statusCode).toBe(404);
             expect(res.body).toHaveProperty('message', 'Blague non trouvée !');
         });
+    });
+
+    // Test pour PUT /api/jokes/:id - mise à jour
+    describe('PUT /api/jokes/:id', () => {
+        it('devrait mettre à jour une blague existante', async() => {
+            // D'abord, on ajoute une blague
+            const nouvelleBlague = {
+                question: "Pourquoi les squelettes ne se battent-ils jamais entre eux ?",
+                response: "Ils n'ont pas le cran."
+            };
+
+            const postRes = await request(app)
+                .post('/api/jokes')
+                .send(nouvelleBlague);
+
+            const blagueId = postRes.body.joke.id;
+
+            // Maintenant, on la met à jour
+            const miseAJour = {
+                question: "Pourquoi les squelettes ne se battent-ils jamais ?",
+                response: "Parce qu'ils n'ont pas le cran."
+            };
+
+            const putRes = await request(app)
+                .put(`/api/jokes/${blagueId}`)
+                .send(miseAJour);
+
+            expect(putRes.statusCode).toBe(200);
+            expect(putRes.body).toHaveProperty('message', 'Blague mise à jour avec succès !');
+            expect(putRes.body.joke.question).toBe(miseAJour.question);
+        });
+    });
+
+    // Test pour DELETE /api/jokes/:id
+    describe('DELETE /api/jokes/:id', () => {
+        it('devrait supprimer une blague existante', async() => {
+            // D'abord, on ajoute une blague
+            const nouvelleBlague = {
+                question: "Pourquoi les mathématiciens détestent-ils la forêt ?",
+                response: "Parce qu'il y a trop de racines carrées."
+            };
+
+            const postRes = await request(app)
+                .post('/api/jokes')
+                .send(nouvelleBlague);
+
+            const blagueId = postRes.body.joke.id;
+
+            // Maintenant, on la supprime
+            const deleteRes = await request(app).delete(`/api/jokes/${blagueId}`);
+
+            expect(deleteRes.statusCode).toBe(200);
+            expect(deleteRes.body).toHaveProperty('message', 'Blague supprimée avec succès !');
+
+            // On vérifie qu'elle n'existe plus
+            const getRes = await request(app).get(`/api/jokes/${blagueId}`);
+            expect(getRes.statusCode).toBe(404);
+        });
+    });
+
+    // Test pour POST /api/jokes - données manquantes
+    it('devrait retourner 500 ou 400 si des données sont manquantes', async () => {
+        const res = await request(app)
+            .post('/api/jokes')
+            .send({ question: "Blague sans réponse ?" }); // Pas de champ 'response'
+
+        expect(res.statusCode).not.toBe(201);
     });
 
     // Flux complet : Création et Récupération
