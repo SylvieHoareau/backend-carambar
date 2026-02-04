@@ -7,8 +7,8 @@ dotenv.config();
 // Récupération du chemin de stockage de la base de données depuis les variables d'environnement
 // Si on est en environnement de test, on utilise une base en mémoire
 const dbStorage = process.env.NODE_ENV === 'test'
-                    ? ':memory'
-                    : process.env.DB_STORAGE_TEST || './database-test.sqlite'
+                    ? './database-test.sqlite'
+                    : (process.env.DB_STORAGE || './database.sqlite');
 
 // Configuration de Sequelize pour utiliser SQLite
 
