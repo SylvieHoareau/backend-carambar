@@ -1,4 +1,11 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import dotenv from 'dotenv';
+
+// Chargement des variables d'environnement depuis le fichier .env
+dotenv.config();
+
+// Récupération de l'URL de base de l'API depuis les variables d'environnement
+const apiBaseUrl = process.env.API_BASE_URL || "http://localhost:3001/api/";
 
 const options = {
     definition: {
@@ -10,7 +17,7 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:3000",
+                url: apiBaseUrl,
                 description: "Serveur de développement"
             }
         ]

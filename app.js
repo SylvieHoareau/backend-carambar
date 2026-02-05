@@ -14,18 +14,30 @@ dotenv.config();
 const app = express();
 
 // Middleware de sécurité pour les en-têtes HTTP
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            connectSrc: ["'self'", "https://localhost:3000", "https://localhost:3001"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+            imgSrc: ["'self'", "data:", "https://validator.swagger.io"]
+        }
+    }
+})
+);
 
 // Configuration CORS
 const corsOptions = {
     origin: '*', // Autoriser toutes les origines
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
     optionsSuccessStatus: 204
 };
 
 // Activer CORS avec les options définies
 app.use(cors(corsOptions));
+
+// Middleware pour lire le JSON
+app.use(express.json());
 
 // Limiteur de taux pour prévenir les abus
 const limiter = rateLimit({
@@ -42,9 +54,6 @@ if (process.env.NODE_ENV !== 'test')
 
 // Documentation Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-// Middleware pour lire le JSON
-app.use(express.json());
 
 // Route de base
 app.get('/', (req, res) => {
