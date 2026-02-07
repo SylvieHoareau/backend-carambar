@@ -2,6 +2,7 @@ import express from "express";
 import {
   addJoke,
   getAllJokes,
+  getRandomJoke,
   getJokeById,
   updateJokeById,
   deleteJokeById,
@@ -140,7 +141,7 @@ router.get("/", getAllJokes);
  *                 message:
  *                   type: string
  *                   example: "Aucune blague trouvée !"
- *      '500':
+ *       '500':
  *         description: Erreur serveur
  *         content:
  *           application/json:

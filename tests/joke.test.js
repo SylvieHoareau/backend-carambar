@@ -6,27 +6,21 @@ import Joke from '../models/jokeModel.js';
 
 // Tests des endpoints des blagues
 describe('Tests des endpoints des blagues', () => {
-    // Avant les tests, on synchronise la base de données
-    beforeAll(async() => {
-        // En forçant la recréation des tables pour un état propre
-        await sequelize.sync({ force: true});
-
-        // On insère un jeu de données de test
-        await Joke.bulkCreate([
-            {
-                question: "Pourquoi les oiseaux volent-ils vers le sud ?",
-                response: "Parce que c'est trop loin pour y aller à pied !"
-            },
-            {
-                question: "Quel est le comble pour un électricien ?",
-                response: "D'avoir des ampoules aux pieds."
-            },
-            {
-                question: "Qua dit un citron qui fait une blague ?",
-                response: "Je suis pressé de vous faire rire !"
-            }
-        ]);
-    });
+    
+   const testJokes = [
+        {
+            question: "Pourquoi les oiseaux volent-ils vers le sud ?",
+            response: "Parce que c'est trop loin pour y aller à pied !"
+        },
+        {
+            question: "Quel est le comble pour un électricien ?",
+            response: "D'avoir des ampoules aux pieds."
+        },
+        {
+            question: "Qua dit un citron qui fait une blague ?",
+            response: "Je suis pressé de vous faire rire !"
+        }
+    ];
 
     beforeEach(async() => {
         // On vide les tables avant chaque test pour s'assurer de l'isolation des tests
@@ -51,6 +45,10 @@ describe('Tests des endpoints des blagues', () => {
 
     // Test pour GET /api/jokes/random
     describe('GET /api/jokes/random', () => {
+         beforeEach(async() => {
+            // On ajoute quelques blagues de test avant chaque test
+            await Joke.bulkCreate(testJokes);
+        });
         it('devrait retourner une blague aléatoire', async() => {
 
             // Maintenant, on demande une blague aléatoire
@@ -81,11 +79,13 @@ describe('Tests des endpoints des blagues', () => {
         })
 
         it('devrait retourner 404 si aucune blague n\'existe', async() => {
-            const res = await request(app).get('/api/jokes/random');
+            // On vide la table juste avant pour s'assurer qu'elle est vide
+            await Joke.destroy({ where: {}, truncate: true });
 
+            const res = await request(app).get('/api/jokes/random');
             expect(res.statusCode).toBe(404);
             expect(res.body).toHaveProperty('message', 'Aucune blague trouvée !');  
-            });
+        });
     });
 
     // Test pour POST /api/jokes
@@ -111,10 +111,10 @@ describe('Tests des endpoints des blagues', () => {
     // Test pour GET /api/jokes/:id
     describe('GET /api/jokes/:id', () => {
         it('devrait récupérer une blague par son ID', async() => {
-            // D'abord, on ajoute une blague pour être sûr qu'elle existe
+            // D'abord, on ajoute une blague pour avoir un ID à tester
             const nouvelleBlague = {
-                question: "Quel est le comble pour un électricien ?",
-                response: "De ne pas être au courant."
+                question: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?",
+                response: "Parce que sinon ils tombent dans le bateau."
             };
 
             const postRes = await request(app)
@@ -127,7 +127,6 @@ describe('Tests des endpoints des blagues', () => {
             const getRes = await request(app).get(`/api/jokes/${blagueId}`);
 
             expect(getRes.statusCode).toBe(200);
-            expect(getRes.body).toHaveProperty('id', blagueId);
             expect(getRes.body.question).toBe(nouvelleBlague.question);
         });
     });

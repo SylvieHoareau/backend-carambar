@@ -1,5 +1,12 @@
 import Joke from '../models/jokeModel.js';
 import sequelize from '../models/index.js';
+import { z } from 'zod';
+
+// Schéma de validation pour les blagues
+const jokeSchema = z.object({
+    question: z.string().min(1, { message: "La question est requise." }),
+    response: z.string().min(1, { message: "La réponse est requise." })
+});
 
 // Obtenir toutes les blagues
 export const getAllJokes = async (req, res) => {
@@ -30,8 +37,12 @@ export const getRandomJoke = async (req, res) => {
 // Ajouter une nouvelle blague
 export const addJoke = async (req, res) => {
     try {
-        const { question, response } = req.body;
-        const newJoke = await Joke.create({ question, response});
+
+        // Validation des données d'entrée
+        const validatedData = jokeSchema.parse(req.body);
+
+        // Création de la blague dans la base de données
+        const newJoke = await Joke.create(validatedData);
         
         res.status(201).json({ 
             message: 'Blague ajoutée avec succès !', 
@@ -39,7 +50,12 @@ export const addJoke = async (req, res) => {
         });
     }
     catch (error) {
-        // Renvoie l'erreur réelle pour le debug, mais en production, on pourrait vouloir masquer cela
+        // Si Zod détecte une erreur de validation, on renvoie un message d'erreur clair
+        if (error instanceof z.ZodError) {
+            const validationErrors = error.errors.map(err => err.message).join(' ');
+            return res.status(400).json({ message: validationErrors });
+        }
+        // Sinon, renvoie l'erreur réelle pour le debug, mais en production, on pourrait vouloir masquer cela
         res.status(500).json({ message: "Données invalides ou manquantes." });
     }
 };
