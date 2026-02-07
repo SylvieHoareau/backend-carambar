@@ -108,6 +108,53 @@ router.get("/", getAllJokes);
 
 /**
  * @swagger
+ * /jokes/random:
+ *   get:
+ *     summary: Obtenir une blague aléatoire
+ *     tags:
+ *       - Blagues
+ *     responses:
+ *       '200':
+ *         description: Blague aléatoire trouvée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 question:
+ *                   type: string
+ *                   example: "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ?"
+ *                 response:
+ *                   type: string
+ *                   example: "Parce que sinon ils tombent dans le bateau."
+ *       '404':
+ *         description: Aucune blague trouvée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Aucune blague trouvée !"
+ *      '500':
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
+ */
+router.get("/random", getRandomJoke);
+
+/**
+ * @swagger
  * /jokes/{id}:
  *   get:
  *     summary: Obtenir une blague par son ID

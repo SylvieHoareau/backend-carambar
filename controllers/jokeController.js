@@ -1,4 +1,5 @@
 import Joke from '../models/jokeModel.js';
+import sequelize from '../models/index.js';
 
 // Obtenir toutes les blagues
 export const getAllJokes = async (req, res) => {
@@ -7,6 +8,22 @@ export const getAllJokes = async (req, res) => {
         res.json(jokes);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des blagues." });
+    }
+};
+
+// Obtenir une blague aléatoire
+export const getRandomJoke = async (req, res) => {
+    try {
+        const joke = await Joke.findOne({ 
+            order: sequelize.random() 
+        });
+        if (joke) {
+            res.json(joke);
+        } else {
+            res.status(404).json({ message: 'Aucune blague trouvée !' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération d'une blague aléatoire." });
     }
 };
 
