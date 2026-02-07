@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '../app.js';
 import sequelize from '../models/index.js';
+import Joke from '../models/jokeModel.js';
 
 // Tests des endpoints des blagues
 describe('Tests des endpoints des blagues', () => {
@@ -9,6 +10,22 @@ describe('Tests des endpoints des blagues', () => {
     beforeAll(async() => {
         // En forçant la recréation des tables pour un état propre
         await sequelize.sync({ force: true});
+
+        // On insère un jeu de données de test
+        await Joke.bulkCreate([
+            {
+                question: "Pourquoi les oiseaux volent-ils vers le sud ?",
+                response: "Parce que c'est trop loin pour y aller à pied !"
+            },
+            {
+                question: "Quel est le comble pour un électricien ?",
+                response: "D'avoir des ampoules aux pieds."
+            },
+            {
+                question: "Qua dit un citron qui fait une blague ?",
+                response: "Je suis pressé de vous faire rire !"
+            }
+        ]);
     });
 
     beforeEach(async() => {
@@ -30,6 +47,45 @@ describe('Tests des endpoints des blagues', () => {
             expect(Array.isArray(res.body)).toBe(true);
             expect(res.body.length).toBe(0);
         });
+    });
+
+    // Test pour GET /api/jokes/random
+    describe('GET /api/jokes/random', () => {
+        it('devrait retourner une blague aléatoire', async() => {
+
+            // Maintenant, on demande une blague aléatoire
+            const res = await request(app).get('/api/jokes/random');
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body).toHaveProperty('question');
+            // On vérifie que la question reçue fait bien partie de notre liste
+            const questions = [
+                "Pourquoi les oiseaux volent-ils vers le sud ?",
+                "Quel est le comble pour un électricien ?",
+                "Qua dit un citron qui fait une blague ?"
+            ];
+            expect(questions).toContain(res.body.question);
+
+            expect(typeof res.body.question).toBe('string');
+        });
+
+        it('GET /api/jokes/random - Ne doit pas être vide', async() => {
+            // D'abord, on ajoute une blague pour être sûr qu'il y en a au moins une
+            const res = await request(app).get('/api/jokes/random');
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body).toHaveProperty('question');
+            expect(res.body).toHaveProperty('response');
+            expect(typeof res.body.question).toBe('string');
+            expect(typeof res.body.response).toBe('string');
+        })
+
+        it('devrait retourner 404 si aucune blague n\'existe', async() => {
+            const res = await request(app).get('/api/jokes/random');
+
+            expect(res.statusCode).toBe(404);
+            expect(res.body).toHaveProperty('message', 'Aucune blague trouvée !');  
+            });
     });
 
     // Test pour POST /api/jokes
