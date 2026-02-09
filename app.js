@@ -57,7 +57,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Route de base
 app.get('/', (req, res) => {
-  res.send('Bienvenue sur le backend de Carambar&amp;Co !');
+  res.redirect('/api-docs'); // Redirige vers la documentation Swagger
 });
 
 // Liste des utilisateurs

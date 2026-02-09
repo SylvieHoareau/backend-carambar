@@ -25,12 +25,22 @@ npm install
 npm run start
 ```
 
-Le serveur démarrera sur http://localhost:3000
+Le serveur démarrera sur http://localhost:3001
+
+# Architecture du projet
+Le projet suit l'approche MVC (Modèle-Vue-Contrôleur) :
+- **Modèle**: Utilisation de Sequelize pour définir le schéma des blagues et interagir avec la base de données SQLite
+- **Contrôleur**: La logique métier est isolée dans jokeController.js, pour une séparation claire en la requête et le traitement des données
+- **Vue**: Dans cette architecture découplée, la "Vue" est double : 
+    1. **API-Docs (Swagger)**: Elle sert de vue technique pour manipuler et tester les ressources
+    2. **Frontend (Next.js)**: Elle constitue l'interface utilisateur finale qui consomme les données JSON 
 
 # Documentation de l'API
 L'API est entièrement documentée via Swagger. Vous pouvez tester chaque route directement depuis votre navigateur :
 
-**Accéder au Swagger UI :** http://localhost/api-docs
+**Accéder au Swagger UI :** 
+- En développement : http://localhost:3001/api-docs
+- En production : https://carambar-co-api.onrender.com/api/
 
 # Liste des Routes principales
 
