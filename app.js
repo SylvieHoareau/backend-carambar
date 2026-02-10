@@ -18,7 +18,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            connectSrc: ["'self'", "http://localhost:3000", "http://localhost:3001", "https://sylviehoareau.github.io"],
+            connectSrc: ["'self'", "http://localhost:3000", "http://localhost:3001", "https://sylviehoareau.github.io", "https://carambar-co-api-cwkc.onrender.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             imgSrc: ["'self'", "data:", "https://validator.swagger.io"]
         }
