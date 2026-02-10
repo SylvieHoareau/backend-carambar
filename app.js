@@ -18,7 +18,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            connectSrc: ["'self'", "https://localhost:3000", "https://localhost:3001"],
+            connectSrc: ["'self'", "http://localhost:3000", "http://localhost:3001", "https://sylviehoareau.github.io"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             imgSrc: ["'self'", "data:", "https://validator.swagger.io"]
         }
@@ -26,9 +26,15 @@ app.use(helmet({
 })
 );
 
+const allowedOrigins = [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'https://sylviehoareau.github.io'
+];
+
 // Configuration CORS
 const corsOptions = {
-    origin: '*', // Autoriser toutes les origines
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204
 };
@@ -61,19 +67,19 @@ app.get('/', (req, res) => {
 });
 
 // Liste des utilisateurs
-app.get('/users', (req, res) => {
-    res.json([
-        { id: 1, name: 'Alice' },
-        { id: 2, name: 'Bob' }
-    ]);
-});
+// app.get('/users', (req, res) => {
+//     res.json([
+//         { id: 1, name: 'Alice' },
+//         { id: 2, name: 'Bob' }
+//     ]);
+// });
 
 // Ajouter un utilisateur
-app.post('/users', (req, res) => {
-    const newUser = req.body;
-    // Ici, vous ajouteriez l'utilisateur à votre base de données
-    res.status(201).json({ message: 'Utilisateur ajouté avec succès !', user: newUser });
-});
+// app.post('/users', (req, res) => {
+//     const newUser = req.body;
+//     // Ici, vous ajouteriez l'utilisateur à votre base de données
+//     res.status(201).json({ message: 'Utilisateur ajouté avec succès !', user: newUser });
+// });
 
 // Utilisation des routes pour les blagues
 app.use('/api/jokes', jokeRoutes);
